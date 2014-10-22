@@ -1,0 +1,96 @@
+/*
+ * Rational.h
+ *
+ *  Created on: Oct 22, 2014
+ *      Author: MOSTAFA
+ */
+
+#include <string>
+
+using namespace std;
+
+class Rational {
+	public :
+		Rational(long num, long den);
+		Rational(long num);
+		Rational();
+		Rational operator+(Rational& that);
+		Rational operator-(Rational& that);
+		Rational operator*(Rational& that);
+		Rational operator/(Rational& that);
+		void print();
+		static Rational readRational(string prompt);
+	private :
+		long num;
+		long den;
+		long gcd(long x, long b);
+		long abs(long a);
+};
+
+Rational::Rational() {
+	num = 0;
+	den = 1;
+}
+
+Rational::Rational(long num) {
+	this->num = num;
+	den = 1;
+}
+
+Rational::Rational(long num, long den) {
+	long g = gcd(abs(num), abs(den));
+	this->num = num / g;
+	this->den = den / g;
+	if (den < 0)
+		this->num = -this->num;
+}
+
+Rational Rational::operator+(Rational& that) {
+	return Rational(this->num * that.den + this->den * that.num, this->den * that.den);
+}
+
+Rational Rational::operator-(Rational& that) {
+	return Rational(this->num * that.den - this->den * that.num, this->den * that.den);
+}
+
+Rational Rational::operator*(Rational& that) {
+	return Rational(this->num * that.num, this->den * that.den);
+}
+
+Rational Rational::operator/(Rational& that) {
+	return Rational(this->num * that.den, this->den * that.num);
+}
+
+void Rational::print() {
+	if (this->den == 1)
+		cout << this->num;
+	else
+		cout << this->num << "/" << this->den;
+}
+
+Rational Rational::readRational(string prompt) {
+	while (1) {
+		long num;
+		long den;
+		char ch;
+		cout << prompt;
+		cin >> num;
+		ch = getchar();
+		if (ch == '\n')
+			return Rational(num);
+		else if (ch == '/') {
+			cin >> den;
+			return Rational(num, den);
+		}
+		cout << "Illegal rational number." << endl;
+	}
+
+}
+
+long Rational::gcd(long x, long y) {
+	return (y == 0) ? x : gcd(y, x % y);
+}
+
+long Rational::abs(long a) {
+	return (a < 0) ? -a : a;
+}
